@@ -5,7 +5,7 @@ import 'babel-polyfill';
 import {Entity, Scene} from 'aframe-react';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import 'aframe-controller-cursor-component';
+import 'super-hands';
 
 
 class App extends React.Component {
@@ -29,6 +29,7 @@ class App extends React.Component {
     }
 
     buttonFocus = (button) => {
+        console.log("mooooooo");
         const buttonLabel = (button === "pause") ? "play" : button;
         if (button === "pause") {
             button = "play";
@@ -43,6 +44,7 @@ class App extends React.Component {
     };
 
     buttonBlur = (button) => {
+        console.log("baaaaaaa");
         const buttonLabel = (button === "pause") ? "play" : button;
         if (button === "pause") {
             button = "play";
@@ -56,7 +58,6 @@ class App extends React.Component {
     };
 
     playAction = () => {
-        console.log(this.state.pausePlay);
         let video = document.getElementById("video-source");
 
         if (this.state.pausePlay === "play") {video.pause();}
@@ -65,7 +66,6 @@ class App extends React.Component {
         const button = this.state.pausePlay === "play" ? "play" : "pause";
         const stateChange = this.state.pausePlay === "play" ? "pause" : "play";
         this.setState({ pausePlay: stateChange });
-        console.log(this.state.pausePlay);
         this.setState({
             playIcon: "src:#" + button + "_icon_negative; transparent:true; shader: flat;",
         });
@@ -124,8 +124,10 @@ class App extends React.Component {
 
                 {/** Player **/}
                 <Entity primitive="a-camera"></Entity>
-                <a-entity id="vive-control-left" vive-controls="hand: left"></a-entity>
-                <a-entity vive-controls="hand: right" controller-cursor="color: #80DEEA;"></a-entity>
+                <a-entity progressive-controls=" maxLevel: point">
+                    <a-entity id="rhand" class="right-controller"></a-entity>
+                    <a-entity id="lhand" class="left-controller"></a-entity>
+                </a-entity>
 
 
 
@@ -175,30 +177,33 @@ class App extends React.Component {
                                 position="-0.333 0 0.1"
                                 material={this.state.lastIcon}
                                 events={{
-                                    mouseenter: () => this.buttonFocus("last"),
-                                    mouseleave: () => this.buttonBlur("last"),
+                                    "hover-start": () => this.buttonFocus("last"),
+                                    "hover-end": () => this.buttonBlur("last"),
                                     click: () => this.lastAction("last"),
                                 }}
+                                hoverable
                         >
                         </Entity>
                         <Entity className="links" id={"video-"+this.state.pausePlay}  class="video-button" primitive="a-plane"
                                 scale="0.333 1 1"
                                 position="0 0 0.1" material={this.state.playIcon}
                                 events={{
-                                    mouseenter: () => this.buttonFocus(this.state.pausePlay),
-                                    mouseleave: () => this.buttonBlur(this.state.pausePlay),
+                                    "hover-start": () => this.buttonFocus(this.state.pausePlay),
+                                    "hover-end": () => this.buttonBlur(this.state.pausePlay),
                                     click: () => this.playAction(this.state.pausePlay),
                                 }}
+                                hoverable
                         >
                         </Entity>
                         <Entity className="links" id="video-next" primitive="a-plane" scale="0.333 1 1"
                                 position="0.333 0 0.1"
                                 material={this.state.nextIcon}
                                 events={{
-                                    mouseenter: () => this.buttonFocus("next"),
-                                    mouseleave: () => this.buttonBlur("next"),
+                                    "hover-start": () => this.buttonFocus("next"),
+                                    "hover-end": () => this.buttonBlur("next"),
                                     click: () => this.nextAction("next"),
                                 }}
+                                hoverable
                         >
                         </Entity>
                     </Entity>

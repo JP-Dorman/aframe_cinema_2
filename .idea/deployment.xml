@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" serverName="Joe Server">
+    <serverData>
+      <paths name="Joe Server">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/aframe_cinema" local="$PROJECT_DIR$" web="/aframe_cinema" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>

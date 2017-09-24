@@ -5,7 +5,7 @@ import 'babel-polyfill';
 import {Entity, Scene} from 'aframe-react';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import 'super-hands';
+import './vendor/superhands-es5.js';
 
 
 class App extends React.Component {
@@ -19,6 +19,7 @@ class App extends React.Component {
             videoNumber: 1,
             maxVideos: 4,
             autoPlay: true,
+            clickCount: 0,
         };
     }
 
@@ -29,7 +30,6 @@ class App extends React.Component {
     }
 
     buttonFocus = (button) => {
-        console.log("mooooooo");
         const buttonLabel = (button === "pause") ? "play" : button;
         if (button === "pause") {
             button = "play";
@@ -44,7 +44,6 @@ class App extends React.Component {
     };
 
     buttonBlur = (button) => {
-        console.log("baaaaaaa");
         const buttonLabel = (button === "pause") ? "play" : button;
         if (button === "pause") {
             button = "play";
@@ -60,12 +59,16 @@ class App extends React.Component {
     playAction = () => {
         let video = document.getElementById("video-source");
 
-        if (this.state.pausePlay === "play") {video.pause();}
-        else {video.play();}
+        if (this.state.pausePlay === "play") {
+            video.pause();
+        }
+        else {
+            video.play();
+        }
 
         const button = this.state.pausePlay === "play" ? "play" : "pause";
         const stateChange = this.state.pausePlay === "play" ? "pause" : "play";
-        this.setState({ pausePlay: stateChange });
+        this.setState({pausePlay: stateChange});
         this.setState({
             playIcon: "src:#" + button + "_icon_negative; transparent:true; shader: flat;",
         });
@@ -73,30 +76,30 @@ class App extends React.Component {
 
     lastAction = () => {
         if (this.state.videoNumber > 1) {
-            this.setState({ videoNumber: this.state.videoNumber - 1 });
+            this.setState({videoNumber: this.state.videoNumber - 1});
         } else {
-            this.setState({ videoNumber: this.state.maxVideos });
+            this.setState({videoNumber: this.state.maxVideos});
         }
 
         if (this.state.pausePlay === "play") {
-            this.setState({ autoPlay: true });
+            this.setState({autoPlay: true});
         } else {
-            this.setState({ autoPlay: false });
+            this.setState({autoPlay: false});
         }
     };
 
     nextAction = () => {
-
+        this.setState({clickCount: this.state.clickCount + 1});
         if (this.state.videoNumber < this.state.maxVideos) {
-            this.setState({ videoNumber: this.state.videoNumber + 1 });
-        }  else {
-            this.setState({ videoNumber: 1 });
+            this.setState({videoNumber: this.state.videoNumber + 1});
+        } else {
+            this.setState({videoNumber: 1});
         }
 
         if (this.state.pausePlay === "play") {
-            this.setState({ autoPlay: true });
+            this.setState({autoPlay: true});
         } else {
-            this.setState({ autoPlay: false });
+            this.setState({autoPlay: false});
         }
     };
 
@@ -118,8 +121,14 @@ class App extends React.Component {
                     <a-asset-item id="light-mtl" src="models/twin_wall_lamp.mtl"></a-asset-item>
                 </a-assets>
 
-                <video id="video-source" autoPlay={this.state.autoPlay} loop="true" src={"video/"+ this.state.videoNumber +".mp4"}></video>
+                <a-entity text={"value:"+ this.state.clickCount +";"} position="8 4 -5" scale="6 10 1"></a-entity>
 
+                {/**
+                 Video source
+                 (outside assets because this.state is undefined on asset load)
+                 **/}
+                <video id="video-source" autoPlay={this.state.autoPlay} loop="true"
+                       src={"video/" + this.state.videoNumber + ".mp4"}></video>
 
 
                 {/** Player **/}
@@ -130,14 +139,12 @@ class App extends React.Component {
                 </a-entity>
 
 
-
                 {/** Scene **/}
                 <Entity primitive="a-light" type="ambient" color="#445451" intensity="0.8"/>
                 <Entity primitive="a-sky" height="2048" radius="30" theta-length="90" width="2048" color="#019DE5"/>
                 <Entity id="floor" primitive="a-plane" material="src:#groundTexture; repeat: 25 25" rotation="-90 0 0"
                         height="100" width="100"
                 />
-
 
 
                 {/** Walls **/}
@@ -148,21 +155,15 @@ class App extends React.Component {
                 <Entity primitive="a-box" width="21" height="0.5" depth="21" color="#424242" position="0 10 0"/>
 
 
-
                 {/** Video **/}
-                <a-video src="#video-source" width="16" height="9" position="0 5 -9.5">
-                </a-video>
-
+                <a-video src="#video-source" width="16" height="9" position="0 5 -9.5"></a-video>
 
 
                 {/** Lights **/}
                 <a-entity obj-model="obj: #light-obj; mtl: #light-mtl" position="9.2 4 -4" scale="0.05 0.05 0.05">
                 </a-entity>
-                <a-entity obj-model="obj: #light-obj; mtl: #light-mtl" position="-9.25 4 -4" scale="0.05 0.05 0.05"
-                          rotation="0 180 0">
-                    /*<Entity primitive="a-light" type="point" intensity="0.1" position="0 0 0"/>*/
+                <a-entity obj-model="obj: #light-obj; mtl: #light-mtl" position="-9.25 4 -4" scale="0.05 0.05 0.05">
                 </a-entity>
-
 
 
                 {/** Video Controls **/}
@@ -179,20 +180,21 @@ class App extends React.Component {
                                 events={{
                                     "hover-start": () => this.buttonFocus("last"),
                                     "hover-end": () => this.buttonBlur("last"),
-                                    click: () => this.lastAction("last"),
+                                    "grab-start": () => this.lastAction("last"),
                                 }}
-                                hoverable
+                                hoverable clickable
                         >
                         </Entity>
-                        <Entity className="links" id={"video-"+this.state.pausePlay}  class="video-button" primitive="a-plane"
+                        <Entity className="links" id={"video-" + this.state.pausePlay} class="video-button"
+                                primitive="a-plane"
                                 scale="0.333 1 1"
                                 position="0 0 0.1" material={this.state.playIcon}
                                 events={{
                                     "hover-start": () => this.buttonFocus(this.state.pausePlay),
                                     "hover-end": () => this.buttonBlur(this.state.pausePlay),
-                                    click: () => this.playAction(this.state.pausePlay),
+                                    "grab-start": () => this.playAction(this.state.pausePlay),
                                 }}
-                                hoverable
+                                hoverable clickable
                         >
                         </Entity>
                         <Entity className="links" id="video-next" primitive="a-plane" scale="0.333 1 1"
@@ -201,9 +203,9 @@ class App extends React.Component {
                                 events={{
                                     "hover-start": () => this.buttonFocus("next"),
                                     "hover-end": () => this.buttonBlur("next"),
-                                    click: () => this.nextAction("next"),
+                                    "grab-start": () => this.nextAction("next"),
                                 }}
-                                hoverable
+                                hoverable clickable
                         >
                         </Entity>
                     </Entity>

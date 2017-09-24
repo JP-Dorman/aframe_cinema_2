@@ -13,6 +13,8 @@
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
     "react-scripts": "0.9.5",
+    "super-hands": "^2.0.1",
+    "uglify-js": "^3.1.1",
     "webpack": "^3.6.0",
     "webpack-dev-server": "^2.8.2"
   },
@@ -21,7 +23,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "publish": "npm run build && gh-pages -d build"
+    "publish": "npm run build && gh-pages -d build",
+    "dist": "webpack index.js node_modules/super-hands/super-hands.js && webpack -p src/index.js dist/super-hands.min.js",
+    "prepublish": "npm run dist"
   },
   "repository": "git+https://github.com/ngokevin/aframe-react-boilerplate.git",
   "keywords": [

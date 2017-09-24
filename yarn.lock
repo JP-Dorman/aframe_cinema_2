@@ -6420,6 +6420,10 @@ style-loader@0.13.1:
   dependencies:
     loader-utils "^0.2.7"
 
+super-hands@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/super-hands/-/super-hands-2.0.1.tgz#77e8a1b54880f6048376bd9c424755371effd856"
+
 supports-color@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-2.0.0.tgz#535d045ce6b6363fa40117084629995e9df324c7"
@@ -6648,7 +6652,7 @@ ua-parser-js@^0.7.9:
   version "0.7.12"
   resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.12.tgz#04c81a99bdd5dc52263ea29d24c6bf8d4818a4bb"
 
-uglify-js@3.1.x:
+uglify-js@3.1.x, uglify-js@^3.1.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.1.1.tgz#e7144307281a1bc38a9a20715090b546c9f44791"
   dependencies:

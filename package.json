@@ -44,7 +44,7 @@
   "bugs": {
     "url": "https://github.com/ngokevin/aframe-react-boilerplate/issues"
   },
-  "homepage": "http://jp-dorman.co.uk/aframe_cinema",
+  "homepage": "http://jp-dorman.co.uk/aframe_cinema_dev",
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",

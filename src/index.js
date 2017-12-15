@@ -1,32 +1,34 @@
-import 'aframe';
+/*import 'aframe';*/
 import 'aframe-animation-component';
 import 'aframe-particle-system-component';
 import 'babel-polyfill';
 import {Entity, Scene} from 'aframe-react';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './vendor/superhands-es5.js';
+/*import './vendor/superhands-es5.js';*/
 
 
 class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            pausePlay: "play",
-            playIcon: "src:#pause_icon; transparent:true; shader: flat;",
+            pausePlay: "pause",
+            playIcon: "src:#play_icon; transparent:true; shader: flat;",
             lastIcon: "src:#last_icon; transparent:true; shader: flat;",
             nextIcon: "src:#next_icon; transparent:true; shader: flat;",
             videoNumber: 1,
             maxVideos: 4,
-            autoPlay: true,
+            autoPlay: false,
             clickCount: 0,
+            firstClick: true,
+            lastReadyClick: false
         };
     }
 
 
     // Document ready
     componentDidMount() {
-
+        /*document.querySelector('a-scene').addEventListener('touchstart', function (e) { e.preventDefault(); });*/
     }
 
     buttonFocus = (button) => {
@@ -74,18 +76,40 @@ class App extends React.Component {
         });
     };
 
+    lastReadyClick = () => {
+        this.setState({lastReadyClick: true});
+    };
+
+    lastCancelClick = () => {
+        console.log("cancel");
+        this.setState({lastReadyClick: false});
+    };
+
     lastAction = () => {
-        if (this.state.videoNumber > 1) {
-            this.setState({videoNumber: this.state.videoNumber - 1});
-        } else {
-            this.setState({videoNumber: this.state.maxVideos});
+        if (this.state.lastReadyClick === true) {
+            if (this.state.videoNumber > 1) {
+                this.setState({videoNumber: this.state.videoNumber - 1});
+            } else {
+                this.setState({videoNumber: this.state.maxVideos});
+            }
+
+            if (this.state.pausePlay === "play") {
+                this.setState({autoPlay: true});
+            } else {
+                this.setState({autoPlay: false});
+            }
+
+            let video = document.getElementById("video-source");
+
+            if (this.state.pausePlay === "play") {
+                video.play();
+            }
+            else {
+                video.pause();
+            }
         }
 
-        if (this.state.pausePlay === "play") {
-            this.setState({autoPlay: true});
-        } else {
-            this.setState({autoPlay: false});
-        }
+
     };
 
     nextAction = () => {
@@ -101,7 +125,18 @@ class App extends React.Component {
         } else {
             this.setState({autoPlay: false});
         }
+
+        let video = document.getElementById("video-source");
+
+        if (this.state.pausePlay === "play") {
+            video.play();
+        }
+        else {
+            video.pause();
+        }
+
     };
+
 
 
     render() {
@@ -121,13 +156,11 @@ class App extends React.Component {
                     <a-asset-item id="light-mtl" src="models/twin_wall_lamp.mtl"></a-asset-item>
                 </a-assets>
 
-                <a-entity text={"value:"+ this.state.clickCount +";"} position="8 4 -5" scale="6 10 1"></a-entity>
-
                 {/**
                  Video source
                  (outside assets because this.state is undefined on asset load)
                  **/}
-                <video id="video-source" autoPlay={this.state.autoPlay} loop="true"
+                <video id="video-source" muted autoPlay={this.state.autoPlay} loop="true"
                        src={"video/" + this.state.videoNumber + ".mp4"}></video>
 
 
@@ -180,7 +213,7 @@ class App extends React.Component {
                                 events={{
                                     "hover-start": () => this.buttonFocus("last"),
                                     "hover-end": () => this.buttonBlur("last"),
-                                    "grab-start": () => this.lastAction("last"),
+                                    "grab-start": () => this.lastAction("last")
                                 }}
                                 hoverable clickable
                         >
@@ -192,7 +225,7 @@ class App extends React.Component {
                                 events={{
                                     "hover-start": () => this.buttonFocus(this.state.pausePlay),
                                     "hover-end": () => this.buttonBlur(this.state.pausePlay),
-                                    "grab-start": () => this.playAction(this.state.pausePlay),
+                                    "grab-end": () => this.playAction(this.state.pausePlay),
                                 }}
                                 hoverable clickable
                         >
@@ -203,7 +236,7 @@ class App extends React.Component {
                                 events={{
                                     "hover-start": () => this.buttonFocus("next"),
                                     "hover-end": () => this.buttonBlur("next"),
-                                    "grab-start": () => this.nextAction("next"),
+                                    "grab-end": () => this.nextAction("next"),
                                 }}
                                 hoverable clickable
                         >

@@ -5,7 +5,7 @@
       <paths name="Joe Server">
         <serverdata>
           <mappings>
-            <mapping deploy="/aframe_cinema" local="$PROJECT_DIR$" web="/aframe_cinema" />
+            <mapping deploy="/aframe_cinema_dev" local="$PROJECT_DIR$" web="/aframe_cinema_dev" />
           </mappings>
         </serverdata>
       </paths>
